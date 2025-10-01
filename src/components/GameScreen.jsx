@@ -20,6 +20,7 @@ import Notification from './Notification';
 import ParticleEffect from './ParticleEffect';
 import LevelCompleteModal from './LevelCompleteModal';
 import FinalSummaryModal from './FinalSummaryModal';
+import DraggingGhost from './DraggingGhost';
 
 const GameScreen = ({ onBackToMenu }) => {
   const gameState = useGameState();

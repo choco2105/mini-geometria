@@ -365,6 +365,7 @@
   cursor: grab;
   transition: all var(--transition-normal);
   user-select: none;
+  position: relative;
 }
 
 .draggable-object:hover {
@@ -381,6 +382,7 @@
   font-size: 3.5rem;
   display: block;
   margin-bottom: 0.5rem;
+  transition: all var(--transition-normal);
 }
 
 .draggable-object__name {
@@ -392,6 +394,15 @@
 .draggable-object--dragging {
   opacity: 0.5;
   cursor: grabbing;
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+  border-color: var(--color-primary);
+  z-index: 1000;
+}
+
+.draggable-object--dragging .draggable-object__emoji {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 10px rgba(147, 51, 234, 0.6));
 }
 
 .draggable-object--matched {
@@ -399,6 +410,26 @@
   pointer-events: none;
   border-color: var(--color-success);
   background: var(--color-gray-light);
+}
+
+/* Elemento flotante mientras se arrastra (solo móvil) */
+.dragging-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 4rem;
+  transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+  filter: drop-shadow(0 10px 20px rgba(147, 51, 234, 0.6));
+  animation: floatingPulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatingPulse {
+  from {
+    transform: translate(-50%, -50%) scale(1.2) rotate(5deg);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.3) rotate(-5deg);
+  }
 }
 
 /* ========================================
@@ -640,18 +671,26 @@
 
   .game-board {
     gap: 0.5rem;
-    height: calc(100vh - 280px);
+    height: calc(100vh - 260px);
+    min-height: 400px;
   }
 
   .shapes-section,
   .objects-section {
     padding: 0.75rem;
     max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .section-title {
     font-size: 1.1rem;
     margin-bottom: 0.75rem;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    padding-bottom: 0.5rem;
   }
 
   .shapes-grid {
@@ -665,7 +704,7 @@
 
   .shape-zone {
     padding: 0.75rem;
-    min-height: 90px;
+    min-height: 100px;
   }
 
   .shape-zone__shape {
@@ -784,7 +823,8 @@
   }
 
   .game-board {
-    height: calc(100vh - 260px);
+    height: calc(100vh - 240px);
+    min-height: 380px;
   }
 
   .shapes-section,
@@ -799,7 +839,7 @@
 
   .shape-zone {
     padding: 0.5rem;
-    min-height: 80px;
+    min-height: 90px;
   }
 
   .shape-zone__shape {

@@ -1,6 +1,7 @@
 /* ========================================
    HOOK DE DRAG & DROP
    Maneja arrastrar y soltar con soporte táctil
+   Y ELEMENTO FANTASMA VISUAL
    ======================================== */
 
 import { useState, useRef } from 'react';
@@ -8,6 +9,7 @@ import { useState, useRef } from 'react';
 export const useDragAndDrop = (onDrop) => {
   const [draggedItem, setDraggedItem] = useState(null);
   const [dragOverZone, setDragOverZone] = useState(null);
+  const [ghostPosition, setGhostPosition] = useState(null);
   const touchStartPos = useRef({ x: 0, y: 0 });
 
   // ========== EVENTOS DE MOUSE (DESKTOP) ==========
@@ -52,20 +54,23 @@ export const useDragAndDrop = (onDrop) => {
     setDraggedItem(null);
   };
 
-  // ========== EVENTOS TÁCTILES (MÓVIL) ==========
+  // ========== EVENTOS TÁCTILES (MÓVIL) CON ELEMENTO FANTASMA ==========
 
   const handleTouchStart = (e, object) => {
-    e.preventDefault();
     const touch = e.touches[0];
     touchStartPos.current = { x: touch.clientX, y: touch.clientY };
     setDraggedItem(object);
+    setGhostPosition({ x: touch.clientX, y: touch.clientY });
   };
 
   const handleTouchMove = (e) => {
     if (!draggedItem) return;
-    e.preventDefault();
 
     const touch = e.touches[0];
+    
+    // Actualizar posición del elemento fantasma
+    setGhostPosition({ x: touch.clientX, y: touch.clientY });
+    
     const element = document.elementFromPoint(touch.clientX, touch.clientY);
     
     // Buscar si el elemento es una zona de forma
@@ -81,7 +86,6 @@ export const useDragAndDrop = (onDrop) => {
 
   const handleTouchEnd = (e, shapes) => {
     if (!draggedItem) return;
-    e.preventDefault();
 
     const touch = e.changedTouches[0];
     const element = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -103,11 +107,13 @@ export const useDragAndDrop = (onDrop) => {
 
     setDraggedItem(null);
     setDragOverZone(null);
+    setGhostPosition(null);
   };
 
   return {
     draggedItem,
     dragOverZone,
+    ghostPosition,
     // Mouse events
     handleDragStart,
     handleDragEnd,
