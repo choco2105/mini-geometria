@@ -91,7 +91,18 @@ export const useGameState = () => {
 
     // Agregar al historial de emparejamientos
     setMatchedPairs(prev => [...prev, { objectId: object.id, shapeId: shape.id }]);
-  }, []);
+
+    // En niveles 3+, ocultar el objeto después de 800ms (tiempo para ver la animación)
+    if (currentLevel >= 3) {
+      setTimeout(() => {
+        setObjects(prevObjects => 
+          prevObjects.map(obj => 
+            obj.id === object.id ? { ...obj, hidden: true } : obj
+          )
+        );
+      }, 800);
+    }
+  }, [currentLevel]);
 
   /**
    * Manejar un emparejamiento incorrecto

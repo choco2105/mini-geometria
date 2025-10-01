@@ -353,13 +353,13 @@ export const LEVELS = [
       {
         id: "party",
         name: "Gorro",
-        emoji: "🎉",
+        emoji: "🎩",
         correctShape: "triangle"
       },
       {
-        id: "yield",
-        name: "Alto",
-        emoji: "🛑",
+        id: "tree",
+        name: "Árbol",
+        emoji: "🌲",
         correctShape: "triangle"
       },
       {
