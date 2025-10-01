@@ -1,6 +1,7 @@
 /* ========================================
    COMPONENTE ZONA DE FORMA (DROP ZONE)
    Zona donde se sueltan los objetos
+   CON SOPORTE TÁCTIL
    ======================================== */
 
 import { motion } from 'framer-motion';
@@ -22,6 +23,7 @@ const ShapeZone = ({
   return (
     <motion.div
       className={`shape-zone ${isDragOver ? 'shape-zone--drag-over' : ''} ${isMatched ? 'shape-zone--matched' : ''} ${isHint ? 'shape-zone--hint' : ''}`}
+      data-shape-id={shape.id}
       onDragOver={(e) => onDragOver(e, shape.id)}
       onDragLeave={onDragLeave}
       onDrop={(e) => onDrop(e, shape)}

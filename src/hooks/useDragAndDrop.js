@@ -1,51 +1,46 @@
 /* ========================================
    HOOK DE DRAG & DROP
-   Maneja la funcionalidad de arrastrar y soltar
+   Maneja arrastrar y soltar con soporte táctil
    ======================================== */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export const useDragAndDrop = (onDrop) => {
   const [draggedItem, setDraggedItem] = useState(null);
   const [dragOverZone, setDragOverZone] = useState(null);
+  const touchStartPos = useRef({ x: 0, y: 0 });
 
-  // Cuando comienza a arrastrar un objeto
+  // ========== EVENTOS DE MOUSE (DESKTOP) ==========
+  
   const handleDragStart = (e, object) => {
     setDraggedItem(object);
     e.dataTransfer.effectAllowed = 'move';
-    // Guardar el ID del objeto en el dataTransfer
     e.dataTransfer.setData('text/plain', object.id);
   };
 
-  // Cuando termina de arrastrar
   const handleDragEnd = () => {
     setDraggedItem(null);
     setDragOverZone(null);
   };
 
-  // Cuando arrastra sobre una zona válida
   const handleDragOver = (e, shapeId) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     setDragOverZone(shapeId);
   };
 
-  // Cuando sale de una zona
   const handleDragLeave = () => {
     setDragOverZone(null);
   };
 
-  // Cuando suelta en una zona
   const handleDrop = (e, shape) => {
     e.preventDefault();
     setDragOverZone(null);
 
     if (!draggedItem) return;
 
-    // Verificar si el objeto corresponde a la forma
     const isCorrect = draggedItem.correctShape === shape.id;
 
-    // Llamar al callback con el resultado
     if (onDrop) {
       onDrop({
         object: draggedItem,
@@ -57,13 +52,71 @@ export const useDragAndDrop = (onDrop) => {
     setDraggedItem(null);
   };
 
+  // ========== EVENTOS TÁCTILES (MÓVIL) ==========
+
+  const handleTouchStart = (e, object) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+    setDraggedItem(object);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!draggedItem) return;
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    // Buscar si el elemento es una zona de forma
+    const shapeZone = element?.closest('[data-shape-id]');
+    
+    if (shapeZone) {
+      const shapeId = shapeZone.getAttribute('data-shape-id');
+      setDragOverZone(shapeId);
+    } else {
+      setDragOverZone(null);
+    }
+  };
+
+  const handleTouchEnd = (e, shapes) => {
+    if (!draggedItem) return;
+    e.preventDefault();
+
+    const touch = e.changedTouches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const shapeZone = element?.closest('[data-shape-id]');
+
+    if (shapeZone && shapes) {
+      const shapeId = shapeZone.getAttribute('data-shape-id');
+      const shape = shapes.find(s => s.id === shapeId);
+
+      if (shape && onDrop) {
+        const isCorrect = draggedItem.correctShape === shape.id;
+        onDrop({
+          object: draggedItem,
+          shape: shape,
+          isCorrect: isCorrect
+        });
+      }
+    }
+
+    setDraggedItem(null);
+    setDragOverZone(null);
+  };
+
   return {
     draggedItem,
     dragOverZone,
+    // Mouse events
     handleDragStart,
     handleDragEnd,
     handleDragOver,
     handleDragLeave,
-    handleDrop
+    handleDrop,
+    // Touch events
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd
   };
 };

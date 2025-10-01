@@ -211,6 +211,9 @@ const GameScreen = ({ onBackToMenu }) => {
         onDragOver={dragAndDrop.handleDragOver}
         onDragLeave={dragAndDrop.handleDragLeave}
         onDrop={dragAndDrop.handleDrop}
+        onTouchStart={dragAndDrop.handleTouchStart}
+        onTouchMove={dragAndDrop.handleTouchMove}
+        onTouchEnd={(e) => dragAndDrop.handleTouchEnd(e, shapesWithCount)}
       />
 
       <Notification

@@ -1,6 +1,7 @@
 /* ========================================
    COMPONENTE OBJETO ARRASTRABLE
    Representa un objeto que se puede arrastrar
+   CON SOPORTE TÁCTIL COMPLETO
    ======================================== */
 
 import { motion } from 'framer-motion';
@@ -10,7 +11,10 @@ const DraggableObject = ({
   isDragging, 
   isMatched,
   onDragStart, 
-  onDragEnd 
+  onDragEnd,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd
 }) => {
   return (
     <motion.div
@@ -18,6 +22,9 @@ const DraggableObject = ({
       draggable={!isMatched}
       onDragStart={(e) => onDragStart(e, object)}
       onDragEnd={onDragEnd}
+      onTouchStart={(e) => onTouchStart(e, object)}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
       whileHover={!isMatched ? { scale: 1.05 } : {}}
       whileTap={!isMatched ? { scale: 0.95 } : {}}
     >

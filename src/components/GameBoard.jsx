@@ -1,6 +1,7 @@
 /* ========================================
    TABLERO DE JUEGO
    Contiene las dos columnas: formas y objetos
+   CON SOPORTE TÁCTIL
    ======================================== */
 
 import ShapesSection from './ShapesSection';
@@ -16,7 +17,10 @@ const GameBoard = ({
   onDragEnd,
   onDragOver,
   onDragLeave,
-  onDrop
+  onDrop,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd
 }) => {
   return (
     <div className="game-board">
@@ -33,6 +37,9 @@ const GameBoard = ({
         draggedItem={draggedItem}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       />
     </div>
   );

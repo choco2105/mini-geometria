@@ -1,6 +1,7 @@
 /* ========================================
    SECCIÓN DE OBJETOS ARRASTRABLES
    Columna derecha con los objetos
+   CON SOPORTE TÁCTIL
    ======================================== */
 
 import DraggableObject from './DraggableObject';
@@ -9,7 +10,10 @@ const ObjectsSection = ({
   objects, 
   draggedItem, 
   onDragStart, 
-  onDragEnd 
+  onDragEnd,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd
 }) => {
   // Contar objetos restantes
   const remainingObjects = objects.filter(obj => !obj.matched).length;
@@ -28,6 +32,9 @@ const ObjectsSection = ({
             isMatched={object.matched}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           />
         ))}
       </div>
